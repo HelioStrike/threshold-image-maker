@@ -11,12 +11,10 @@ class ThresholdImageMaker():
     def set_threshold(self, threshold):
         self.threshold = threshold
     
-    def make_binary_image(self, im_path, to_path, threshold_mode='adaptive', clean_image=False, transparent_background=False):
+    def make_binary_image(self, im_path, threshold_mode='adaptive', clean_image=False, transparent_background=False):
         img = cv2.imread(im_path,0)
         
         assert threshold_mode in threshold_modes, "Invalid value of threshold_mode."
-        if transparent_background:
-            assert to_path.split('.')[-1] == 'png', "If transparent_background=True, to_path must be PNG."
 
         if threshold_mode == 'global':
             _, thresh = cv2.threshold(img, self.threshold, 255, cv2.THRESH_BINARY)
@@ -29,4 +27,11 @@ class ThresholdImageMaker():
         if transparent_background:
             thresh = add_alpha_channel(np.stack([thresh]*3, axis=-1))
 
-        cv2.imwrite(to_path, thresh)
+        return thresh
+
+    def save_binary_image(self, im_path, to_path, threshold_mode='adaptive', clean_image=False, transparent_background=False):
+        if transparent_background:
+            assert to_path.split('.')[-1] == 'png', "If transparent_background=True, to_path must be PNG."
+
+        img = self.make_binary_image(im_path, threshold_mode=threshold_mode, clean_image=clean_image, transparent_background=transparent_background)
+        cv2.imwrite(to_path, img)
