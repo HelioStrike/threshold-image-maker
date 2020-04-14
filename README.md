@@ -1,7 +1,5 @@
 # threshold-image-maker
 
-# Pathomics Research Utils
-
 Tiny helper module than can threshold an image and obtain its mask, and has a few helper functions like making the background transparent, and removing noise using connected components.
 
 ## Installation
